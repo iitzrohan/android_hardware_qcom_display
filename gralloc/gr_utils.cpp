@@ -1394,8 +1394,8 @@ int GetImplDefinedFormat(uint64_t usage, int format) {
       gr_format = HAL_PIXEL_FORMAT_RGBA_8888;
     } else if (format == HAL_PIXEL_FORMAT_YCbCr_420_888) {
       // If no other usage flags are detected, default the
-      // flexible YUV format to YCrCb_420_SP
-      gr_format = HAL_PIXEL_FORMAT_YCrCb_420_SP;
+      // flexible YUV format to NV21_ZSL
+      gr_format = HAL_PIXEL_FORMAT_NV21_ZSL;
     }
   }
 
@@ -1769,7 +1769,8 @@ void GetRGBPlaneInfo(const BufferInfo &info, int32_t format, int32_t width, int3
   if (HasAlphaComponent(format)) {
     plane_info->component = (PlaneComponent)(plane_info->component | PLANE_COMPONENT_A);
   }
-  plane_info->size = GetSize(info, width, height);
+  GetBufferSizeAndDimensions(info, &(plane_info->size), (unsigned int *) &width,
+                             (unsigned int *) &height);
   plane_info->step = GetBpp(format);
   plane_info->offset = GetRgbMetaSize(format, width, height, usage);
   plane_info->h_subsampling = 0;
